@@ -466,17 +466,17 @@ module.exports = async (msg, client, from, store) => {
       break
     //
     case prefix + 'add': {
-      if (!isGroup) return msg.reply('Khusus Grup')
-      if (!isGroupAdmins) return msg.reply('Khusus Admin')
-      if (!isBotGroupAdmins) return msg.reply('Bot Bukan Admin')
+      if (!isGroup) msg.reply('Khusus Grup')
+      if (!isGroupAdmins) msg.reply('Khusus Admin')
+      if (!isBotGroupAdmins) msg.reply('Bot Bukan Admin')
       if (args[1]) {
         let number = msg.quoted ? msg.quoted.sender : q.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
         let response = await client.groupParticipantsUpdate(from, [number], "add")
         let o = await response[0]
         let inv = o.status
-        if (inv == 408) return msg.reply('Dia baru-baru saja keluar dari grub ini!')
-        if (inv == 409) return msg.reply('Dia sudah join!')
-        if (inv == 500) return msg.reply('Grub penuh!')
+        if (inv == 408) msg.reply('Dia baru-baru saja keluar dari grub ini!')
+        if (inv == 409) msg.reply('Dia sudah join!')
+        if (inv == 500) msg.reply('Grub penuh!')
         if (inv == 403) {
           client.sendMessage(from, { text: `@${number.split('@')[0]} tidak dapat ditambahkan karena target private acc*\nUndangan akan dikirimkan ke -> wa.me/${q.replace(/[^0-9]/g, '')} Melalui jalur pribadi`, mentions: [number] }, { quoted: msg })
           client.sendMessage(`${number}`, { text: `${'https://chat.whatsapp.com/' + invv}\n------------------------------------------------------\n\nAdmin:\nwa.me/${msg.sender}\n Mengundang anda ke group ini\nSilahkan masuk jika berkehendak🙇`, mentions: [number] }, { quoted: msg })
@@ -489,9 +489,9 @@ module.exports = async (msg, client, from, store) => {
         let invv = await client.groupInviteCode(from)
         console.log(inv)
         console.log(mentionUser)
-        if (inv == 408) return msg.reply('Dia baru-baru saja keluar dari grub ini!')
-        if (inv == 409) return msg.reply('Dia sudah join!')
-        if (inv == 500) return msg.reply('Grub penuh!')
+        if (inv == 408) msg.reply('Dia baru-baru saja keluar dari grub ini!')
+        if (inv == 409) msg.reply('Dia sudah join!')
+        if (inv == 500) msg.reply('Grub penuh!')
         if (inv == 403) {
           client.sendMessage(from, { text: `${mentionUser} tidak dapat ditambahkan karena target private acc*\nUndangan akan dikirimkan ke -> wa.me/${mentionUser} Melalui jalur pribadi`, mentions: [mentionUser] }, { quoted: msg })
           client.sendMessage(`${mentionUser}`, { text: `${'https://chat.whatsapp.com/' + invv}\n------------------------------------------------------\n\nAdmin:\nwa.me/${msg.sender}\n Mengundang anda ke group ini\nSilahkan masuk jika berkehendak🙇`, mentions: [mentionUser] }, { quoted: msg })
@@ -502,10 +502,10 @@ module.exports = async (msg, client, from, store) => {
       break
     //
     case prefix + 'kick': {
-      if (!isGroup) return msg.reply('Khusus Grup')
-      if (!isGroupAdmins) return msg.reply('Khusus Admin')
-      if (!isBotGroupAdmins) return msg.reply('Bot Bukan Admin')
-      if (!mentionUser) return msg.reply('Tag atau msg.reply member yg akan di kick!!')
+      if (!isGroup) msg.reply('Khusus Grup')
+      if (!isGroupAdmins) msg.reply('Khusus Admin')
+      if (!isBotGroupAdmins) msg.reply('Bot Bukan Admin')
+      if (!mentionUser) msg.reply('Tag atau msg.reply member yg akan di kick!!')
       console.log(mentionUser)
       client.groupParticipantsUpdate(from, mentionUser, "remove")
     }
@@ -695,7 +695,30 @@ module.exports = async (msg, client, from, store) => {
       }
     }
       break
-
+    case 'emojimix': case 'mixemoji':
+    case 'emojmix': case 'emojinua':
+      if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+      if (!q) return reply(`Kirim perintah ${command} emoji1+emoji2\ncontoh : !${command} 😜+😅`)
+      if (!q.includes('+')) return reply(`Format salah, contoh pemakaian !${command} 😅+😭`)
+      var emo1 = q.split("+")[0]
+      var emo2 = q.split("+")[1]
+      if (!isEmoji(emo1) || !isEmoji(emo2)) return reply(`Itu bukan emoji!`)
+      fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emo1)}_${encodeURIComponent(emo2)}`)
+        .then(data => {
+          var opt = { packname: 'asbBot MD', author: 'By Asb' }
+          conn.sendImageAsSticker(from, data.results[0].url, msg, opt)
+        }).catch((e) => reply(mess.error.api))
+      break
+    case 'emojimix2': case 'mixemoji2':
+    case 'emojmix2': case 'emojinua2': {
+      if (!q) return reply(`Example : ${prefix + command} 😅`)
+      let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(q)}`)
+      for (let res of anu.results) {
+        var opt = { packname: 'asbBot MD', author: 'By Asb' }
+        let encmedia = await conn.sendImageAsSticker(from, res.url, msg, opt)
+      }
+    }
+      break
     // 
     case prefix + "pp": {
       client.sendMessage(from, { history: "Anu" }, { quoted: msg })
