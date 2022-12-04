@@ -72,7 +72,7 @@ return xkon
 }
 
 exports.fkontak = (from) => { 
-xfkontak = { key: { fromMe: false, participant: `0@s.whatsapp.net`, ...(from ? { remoteJid: '6283136505591-1604595598@g.us' } : {})}, message: { "contactMessage":{"displayName": `XM-Multi`,"vcard":`BEGIN:VCARD\nVERSION:3.0\nN:2;katame;;;\nFN:katame\nitem1.TEL;waid=00000:00000\nitem1.X-ABLabel:Mobile\nEND:VCARD` }}}
+xfkontak = { key: { fromMe: false, participant: `0@s.whatsapp.net`, ...(from ? { remoteJid: '6283823712304-1604595598@g.us' } : {})}, message: { "contactMessage":{"displayName": `XM-Multi`,"vcard":`BEGIN:VCARD\nVERSION:3.0\nN:2;katame;;;\nFN:katame\nitem1.TEL;waid=00000:00000\nitem1.X-ABLabel:Mobile\nEND:VCARD` }}}
 return xfkontak
 }
 

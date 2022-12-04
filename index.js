@@ -44,7 +44,7 @@ try {
   async function operate() {
     const { state, saveState } = useSingleFileAuthState(SETTING.sesionName + '.json');
     let { version } = fetchLatestBaileysVersion()
-    const client = makeWASocket({ logger: pino({ level: 'silent' }), printQRInTerminal: true, browser: ['ASB-BOT v3', 'Safari', '1.0.0'], auth: state })
+    const client = makeWASocket({ logger: pino({ level: 'silent' }), printQRInTerminal: true, browser: ['termux ASB-BOT v3', 'Safari', '1.0.0'], auth: state })
 
 
     /** plugins **/

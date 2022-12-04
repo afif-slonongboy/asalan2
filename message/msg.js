@@ -55,6 +55,7 @@ const { goLens } = require('../lib/SCRAPER/goLens')
 const { ephoto } = require('../lib/SCRAPER/ephoto')
 const Menu_List = require('../lib/validator/menu')
 const { ulartangga } = require('./game/ulartangga')
+const nyoutube = ('®  Asb-Bot')
 //=======================================================//
 /* { media } */
 //=======================================================//
@@ -705,7 +706,7 @@ module.exports = async (msg, client, from, store) => {
       if (!isEmoji(emo1) || !isEmoji(emo2)) return reply(`Itu bukan emoji!`)
       fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emo1)}_${encodeURIComponent(emo2)}`)
         .then(data => {
-          var opt = { packname: 'asbBot MD', author: 'By Asb' }
+          var opt = { packname: 'asb Bot MD', author: 'By Asb' }
           conn.sendImageAsSticker(from, data.results[0].url, msg, opt)
         }).catch((e) => reply(mess.error.api))
       break
@@ -714,7 +715,7 @@ module.exports = async (msg, client, from, store) => {
       if (!q) return reply(`Example : ${prefix + command} 😅`)
       let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(q)}`)
       for (let res of anu.results) {
-        var opt = { packname: 'asbBot MD', author: 'By Asb' }
+        var opt = { packname: 'asb Bot MD', author: 'By Asb' }
         let encmedia = await conn.sendImageAsSticker(from, res.url, msg, opt)
       }
     }
@@ -929,6 +930,33 @@ module.exports = async (msg, client, from, store) => {
     }
       break
     //
+    case prefix + 'couple': {
+      msg.reply('tunggu....')
+      let anu = await fetchJson('https://raw.githubusercontent.com/iamriz7/kopel_/main/kopel.json')
+      let random = anu[Math.floor(Math.random() * anu.length)]
+      client.sendMessage(from, { image: { url: random.male }, caption: `Laki-laki` }, { quoted: msg.fkontak })
+      client.sendMessage(from, { image: { url: random.female }, caption: `Perempuan` }, { quoted: msg.fkontak })
+    }
+      break
+    //
+    case prefix + 'quotesanime': case prefix + 'quoteanime': {
+      let { quotesAnime } = require('../lib/scraper')
+      let anu = await quotesAnime()
+      result = anu[Math.floor(Math.random() * anu.length)]
+      let buttons = [
+        { buttonId: `quotesanime`, buttonText: { displayText: 'Next' }, type: 1 }
+      ]
+      let buttonMessage = {
+        text: `~_${result.quotes}_\n\nBy '${result.karakter}' \n\nAnime : ${result.anime}\n\n- ${result.up_at}`,
+        footer: nyoutube,
+        headerType: 2
+      }
+      client.sendMessage(from, buttonMessage, { quoted: msg.fkontak })
+    }
+      break
+    //PEMBATAS=======================================
+
+    //
     case prefix + 'youtubemp3': {
       if (args.length < 1) return msg.reply('linknya?')
       msg.reply('Downloading......')
@@ -1042,36 +1070,19 @@ module.exports = async (msg, client, from, store) => {
     case prefix + 'tiktoknowm': {
       if (args.length < 1) return msg.reply('linknya?')
       msg.reply('Downloading.....')
-      try {
-        await TiktokDownloader(args[0])
-          .then(async hasil => {
+      fetchJson(`https://saipulanuar.ga/api/download/tiktok2?url=${q}&apikey=dyJhXvqe`)
+        .then(tt_res => {
+          reply(`𝗧𝗜𝗞𝗧𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗
 
-            var { media } = hasil
-            console.log(hasil)
-            msg.reply('Sending.....')
-            let vid = {
-              video: {
-                url: media[1].url
-              },
-              caption: hasil.title,
-              contextInfo: {
-                externalAdReply: {
-                  title: time,
-                  body: `${msg.sayingtime + msg.timoji + ' ' + msg.pushName}`,
-                  thumbnail: thumb,
-                  sourceUrl: "https://instagram.com/4k.sanz",
-                  mediaUrl: "https://instagram.com/4k.sanz",
-                  //renderLargerThumbnail: true,
-                  showAdAttribution: true,
-                  mediaType: 1
-                }
-              }
-            }
-            client.sendMessage(from, vid, { quoted: msg.fkontak })
+𝙅𝙪𝙙𝙪𝙡: ${tt_res.result.judul}
+𝙎𝙤𝙪𝙧𝙘𝙚: ${q}
+
+Video sedang dikirim...`)
+          client.sendMessage(from, { video: { url: tt_res.result.video.link2 }, caption: 'No Watermark!' }, { quoted: msg.fkontak })
+        }).catch((err) => {
+          reply('Terjadi Kesalahan!!\nUrl tidak valid')
           })
-      } catch (e) {
-        msg.reply(`Akses ditolak, tidak dapat mengunduh!. Cobalah menggunakan link yang lain\n\nType err :\n${e}`)
-      }
+
     }
       break
     case prefix + 'bugpay': case prefix + 'bugpayement': {
